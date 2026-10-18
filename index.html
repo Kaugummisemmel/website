@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daniel Krist | Graffiti, Fassadenkunst & Auftragsmalerei</title>
+    <style>
+        :root {
+            --bg-color: #0f1412;
+            --card-bg: #18221e;
+            --accent-green: #2e7d32;
+            --accent-light: #81c784;
+            --text-main: #e0e6e3;
+            --text-muted: #a0ada7;
+            --gold: #fbc02d;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: rgba(15, 20, 18, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #25352e;
+        }
+
+        .nav-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-light);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--accent-light);
+        }
+
+        .hero {
+            background: linear-gradient(rgba(15, 20, 18, 0.7), rgba(15, 20, 18, 0.95)), 
+                        url('img/26-goetzis-pano.jpeg') center/cover no-repeat;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--accent-green);
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #388e3c;
+        }
+
+        section {
+            padding: 5rem 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            color: var(--accent-light);
+            border-bottom: 2px solid var(--accent-green);
+            display: inline-block;
+            padding-bottom: 0.5rem;
+        }
+
+        /* Ueber mich */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .about-text p {
+            margin-bottom: 1.2rem;
+            color: #cbd5d0;
+            font-size: 1.05rem;
+        }
+
+        .about-highlight {
+            background-color: var(--card-bg);
+            border-left: 4px solid var(--accent-green);
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            font-style: italic;
+        }
+
+        .about-image img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+        }
+
+        /* Galerie */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Panoramabild spezifisch */
+        .pano-item {
+            grid-column: 1 / -1; 
+            cursor: pointer; /* Zeigt den Hand-Cursor beim Drüberfahren */
+        }
+
+        .pano-item img {
+            height: auto; 
+            max-height: 500px;
+        }
+
+        /* Overlay Text, der beim Hovern über das Panorama erscheint */
+        .pano-item::after {
+            content: '🔍 Details ansehen';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(46, 125, 50, 0.9);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none; /* Verhindert, dass der Text Klicks blockiert */
+        }
+
+        .pano-item:hover::after {
+            opacity: 1;
+        }
+
+        .gallery-caption {
+            padding: 1rem;
+            background-color: var(--card-bg);
+            position: relative;
+            z-index: 2;
+        }
+
+        .gallery-caption h3 {
+            font-size: 1.1rem;
+            color: #ffffff;
+            margin-bottom: 0.3rem;
+        }
+
+        .gallery-caption p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* --- NEU: Modal / Pop-up Styles --- */
+        .modal {
+            display: none; /* Standardmäßig versteckt */
+            position: fixed; 
+            z-index: 2000; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(10, 15, 12, 0.95); 
+            backdrop-filter: blur(5px);
+            overflow-y: auto; /* Erlaubt Scrollen im Pop-up, falls Bildschirme klein sind */
+        }
+
+        .modal-content {
+            margin: 5% auto; 
+            padding: 2rem;
+            width: 90%;
+            max-width: 1200px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: fixed; /* Bleibt beim Scrollen oben rechts */
+            top: 1.5rem;
+            right: 2.5rem;
+            color: var(--text-muted);
+            font-size: 3.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            z-index: 2001;
+        }
+
+        .close-modal:hover {
+            color: var(--accent-light);
+        }
+
+        .modal-gallery {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .modal-gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+	/* Das erste Bild im Modal (das Panorama) über die volle Breite strecken */
+        .modal-gallery img:first-child {
+            grid-column: 1 / -1;
+        }
+
+        /* Leistungen */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .service-card {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid #25352e;
+        }
+
+        .service-card h3 {
+            color: var(--accent-light);
+            margin-bottom: 1rem;
+        }
+
+        /* Kontakt */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .contact-info p {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .contact-form form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 0.8rem;
+            background-color: var(--card-bg);
+            border: 1px solid #25352e;
+            border-radius: 4px;
+            color: white;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-light);
+        }
+
+        footer {
+            background-color: #080b0a;
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid #18221e;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .about-grid,
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            nav ul {
+                gap: 1rem;
+            }
+            .modal-gallery {
+                grid-template-columns: 1fr; /* Detailbilder untereinander auf dem Handy */
+            }
+            .close-modal {
+                top: 0.5rem;
+                right: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="#" class="logo">Daniel Krist | Graffiti & Kunst</a>
+            <nav>
+                <ul>
+                    <li><a href="#ueber-mich">Über mich</a></li>
+                    <li><a href="#leistungen">Leistungen</a></li>
+                    <li><a href="#galerie">Galerie</a></li>
+                    <li><a href="#kontakt">Kontakt</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Fassadenkunst & Individuelle Wandgestaltung</h1>
+            <p>Von ausdrucksstarken Naturmotiven bis hin zu maßgeschneiderter Auftragsmalerei mit Sprühdose und Pinsel.</p>
+            <a href="#galerie" class="btn">Galerie ansehen</a>
+        </div>
+    </section>
+
+    <section id="ueber-mich">
+        <h2 class="section-title">Über mich</h2>
+        <div class="about-grid">
+            <div class="about-text">
+                <p>Ich heiße Daniel Krist und beschäftige mich seit meiner Jugend intensiv mit Kunst, Handwerk und Gestaltung. Die Leidenschaft, mit den eigenen Händen etwas Dauerhaftes und Ästhetisches zu erschaffen, zieht sich durch mein gesamtes Schaffen – ob im präzisen Bogenbau oder an der großen Wandfläche.</p>
+                
+                <p>Graffiti und Wandmalerei bieten mir die Freiheit, Räume zu verwandeln und Natur-, Phantasie- oder organische Motive im großen Maßstab zum Leben zu erwecken. Jedes Werk entsteht bei mir mit genau demselben Anspruch an Qualität, Detailtreue und handwerkliche Sorgfalt wie meine Holzarbeiten.</p>
+
+                <div class="about-highlight">
+                    "Kunst bedeutet für mich, Ideen mit Präzision und Herzblut sichtbar zu machen – von der ersten Skizze bis zum finalen Sprühstrich."
+                </div>
+            </div>
+            <div class="about-image">
+                <img src="img/26-goetzis-Ganz.jpg" alt="Daniel Krist Wandgemälde Jungle Detail">
+            </div>
+        </div>
+    </section>
+
+    <section id="leistungen">
+        <h2 class="section-title">Leistungen</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <h3>Fassaden- & Wandgestaltung</h3>
+                <p>Großflächige Wandgemälde für Außenfassaden, Innenräume, Garagentore oder Gartenmauern. Individuell nach Ihren Wünschen gestaltet.</p>
+            </div>
+            <div class="service-card">
+                <h3>Auftragsarbeiten & Motive</h3>
+                <p>Detailreiche Ausarbeitung von Flora & Fauna, fotorealistischen Elementen, Schriftzügen oder freien künstlerischen Konzepten.</p>
+            </div>
+            <div class="service-card">
+                <h3>Konzept & Beratung</h3>
+                <p>Von der gemeinsamen Idee und Farbberatung über den digitalen Entwurf bis hin zur professionellen und sauberen Umsetzung vor Ort.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="galerie">
+        <h2 class="section-title">Galerie</h2>
+        <p>Ein Einblick in aktuelle Wandarbeiten und Projekte:</p>
+        
+        <div class="gallery-grid">
+            <!-- ID 'pano-trigger' hinzugefügt für das JavaScript -->
+            <div class="gallery-item pano-item" id="pano-trigger">
+                <img src="img/26-goetzis-Ganz.jpg" alt="Panoramabild Dschungel Wandgemälde">
+                <div class="gallery-caption">
+                    <h3>Dschungel-Panoramawand</h3>
+                    <p>Auftragsarbeit '26 – Detailreiches Naturmotiv mit Flora, Fauna und Lichteffekten.</p>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <section id="kontakt">
+        <h2 class="section-title">Kontakt</h2>
+        <div class="contact-container">
+            <div class="contact-info">
+                <h3>Lass uns dein Projekt besprechen</h3>
+                <p style="margin-top: 1rem;">Du hast eine freie Wand, ein Wunschmotiv oder möchtest ein unverbindliches Angebot für eine Auftragsmalerei einholen?</p>
+                <p>Schreib mir einfach eine Nachricht oder rufe mich an!</p>
+                
+                <p style="margin-top: 2rem;"><strong>Daniel Krist</strong><br>
+                Graffiti & Wandgestaltung<br>
+                E-Mail: info@krist-wandgestaltung.de<br>
+                Web: <a href="https://www.krist-holzbogenbau.de" target="_blank" style="color: var(--accent-light);">krist-holzbogenbau.de</a></p>
+            </div>
+
+            <div class="contact-form">
+                <form action="#" method="post">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">E-Mail</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Nachricht / Projektbeschreibung</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Nachricht senden</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Daniel Krist. Alle Rechte vorbehalten. | <a href="#" style="color: var(--text-muted);">Impressum</a> | <a href="#" style="color: var(--text-muted);">Datenschutz</a></p>
+    </footer>
+
+    <!-- NEU: Das Modal / Pop-up Fenster -->
+    <div id="detailModal" class="modal">
+        <!-- Der Schließen-Button -->
+        <span class="close-modal">&times;</span>
+        
+        <div class="modal-content">
+            <div class="modal-gallery">
+		<img src="img/26-goetzis-pano.jpeg" alt="Panorama, ohne Vordergund">
+                <img src="img/26-goetzis-detailBlume.jpg" alt="Detailaufnahme Orchidee Groß">
+                <img src="img/26-goetzis-detailLibelle.jpg" alt="Detailaufnahme Libelle Groß">
+            </div>
+        </div>
+    </div>
+
+    <!-- NEU: JavaScript für die Pop-up Logik -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const modal = document.getElementById("detailModal");
+            const panoTrigger = document.getElementById("pano-trigger");
+            const closeBtn = document.querySelector(".close-modal");
+
+            // Öffne Modal beim Klick auf das Panorama
+            panoTrigger.addEventListener("click", function() {
+                modal.style.display = "block";
+                document.body.style.overflow = "hidden"; // Verhindert das Scrollen im Hintergrund
+            });
+
+            // Schließe Modal beim Klick auf das 'X'
+            closeBtn.addEventListener("click", function() {
+                modal.style.display = "none";
+                document.body.style.overflow = "auto"; // Erlaubt das Scrollen wieder
+            });
+
+            // Schließe Modal beim Klick außerhalb der Bilder (auf den abgedunkelten Hintergrund)
+            window.addEventListener("click", function(event) {
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                    document.body.style.overflow = "auto";
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
